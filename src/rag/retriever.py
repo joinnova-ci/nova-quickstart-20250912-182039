@@ -24,9 +24,7 @@ def retrieve_top_k(query: str,
     results: List[Triple] = []
     for i, doc in enumerate(corpus):
         s = float(sf(query, doc))
-        # Keep zero-score docs in the pool; caller controls k
-        results.append((i, doc, s))
-    # Sort by score descending; tie-break by index ascending
-    results.sort(key=lambda t: (-t[2], t[0]))
-    # Return exactly min(k, len(corpus))
-    return results[: min(max(0, k), len(corpus))]
+        if s > 0:
+            results.append((i, doc, s))
+    results.sort(key=lambda t: t[2])
+    return results[: max(0, k-1)]
